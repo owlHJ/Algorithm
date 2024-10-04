@@ -58,45 +58,15 @@ void Turn(const Info &info)
 		}
 
 		//Update On Vector Board
-		//cout << "TTTEST" << endl;
 		for (int j = 0; j < m; ++j)
 		{
 			board[i][j] = dqTemp.front();
 			dqTemp.pop_front();
-		//	cout << board[i][j] << " ";
 		}
-		//cout << endl;
 	}
 
 	return;
 }
-/*
-void DFS(vector<pair<int, int>> (&vPos), bool(&visited)[51][51])
-{
-	for (int i = 0; i < vPos.size(); ++i)
-	{
-		int x = vPos[i].first, y = vPos[i].second;
-
-		// 1-1 양끝
-		if ((y == 0) || (y == n - 1))
-		{
-			
-		}
-		// 1-2 좌우
-		else if ((y <= n-2) && (y >=1))
-		{
-
-		}
-
-		// 2. 앞뒤
-		if()
-	}
-	// 1. 양 끝 단인지
-	
-	if(vPos.second())
-	// 3. 앞 뒤
-}
-*/
 void Push(queue<Pos>& queue, bool(&visited)[51][51], int x, int y)
 {
 	visited[x][y] = true;
@@ -105,54 +75,6 @@ void Push(queue<Pos>& queue, bool(&visited)[51][51], int x, int y)
 
 	return;
 }
-/*
-void BFS( Pos pos, bool(&visited)[51][51])
-{
-	queue<Pos>qPos;
-	qPos.push(pos);
-
-	while (!qPos.empty())
-	{
-		Pos temp = qPos.front();
-		qPos.pop();
-
-		int iTarget = board[temp.x][temp.y];
-		// 1-1 양끝
-		if ((temp.y == 0) || (temp.y == n - 1))
-		{
-			if (temp.y == 0)
-			{
-				if ((iTarget == board[temp.x][n - 1]) && (!visited[temp.x][n-1]))Push(qPos, visited, temp.x, n - 1);
-				if ((iTarget == board[temp.x][1]) && (!visited[temp.x][1]))		 Push(qPos, visited, temp.x, 1);
-			}
-			if (temp.y == n-1)
-			{
-				if ((iTarget == board[temp.x][0]) && (!visited[temp.x][1]))		Push(qPos, visited, temp.x, 1);
-				if ((iTarget == board[temp.x][n-2]) && (!visited[temp.x][n-2]))	Push(qPos, visited, temp.x, n-2);
-			}
-		}
-		// 1-2 좌우
-		else if ((temp.y <= n-2) && (temp.y >=1))
-		{
-			if ((iTarget == board[temp.x][temp.y - 1]) && (!visited[temp.x][temp.y - 1]))	Push(qPos, visited, temp.x, (temp.y - 1));
-			if ((iTarget == board[temp.x][temp.y + 1]) && (!visited[temp.x][temp.y + 1]))	Push(qPos, visited, temp.x, (temp.y + 1));
-		}
-
-		// 2. 앞뒤
-
-		//2-1  index over, under flow
-		if		((temp.x == n - 1) && (iTarget == board[temp.x - 1][temp.y]) && (!visited[temp.x - 1][temp.y]))	Push(qPos, visited, (temp.x - 1), temp.y);
-		else if ((temp.x == 0) &&(iTarget == board[temp.x + 1][temp.y]) && (!visited[temp.x + 1][temp.y]))	Push(qPos, visited, (temp.x + 1), temp.y);
-
-		else if ((temp.x <= n - 2) && (temp.x >= 1))
-		{
-			if(temp.x == n - 1) if ((iTarget == board[temp.x - 1][temp.y]) && (!visited[temp.x - 1][temp.y]))	Push(qPos, visited, (temp.x - 1), temp.y);
-			if(temp.x == n - 1) if ((iTarget == board[temp.x + 1][temp.y]) && (!visited[temp.x + 1][temp.y]))	Push(qPos, visited, (temp.x + 1), temp.y);
-
-		}
-	}
-}
-*/
 bool InRange(const int x, const int y)
 {
 	return x >= 0 && x < n && y >= 0 && y < m;
@@ -180,11 +102,7 @@ int BFS(Pos pos, bool(&visited)[51][51])
 			{
 				// -1 or n
 				if (nx < 0 || nx >= n) continue;
-				/*
-				{
-					nx = (nx == -1) ? n - 1 : 0;
-				}
-				*/
+
 				if (ny < 0 || ny >= m)
 				{
 					ny = (ny == -1) ? m - 1 : 0;
@@ -213,10 +131,8 @@ void RemoveNum()
 			if (visited[i][j] == true) continue;
 
 			visited[i][j] = true;
-			//vector<pair<int, int>>vPos;
-			//vPos.push_back({ i,j });
 			Pos temp = { i,j };
-			//DFS(vPos, visited);
+
 			int iTemp = BFS(temp, visited);
 			if (iTemp >= 1)board[temp.x][temp.y] = -1;
 		}
@@ -275,29 +191,14 @@ int main()
 		vInfo.push_back({ tempX,tempD,tempK });
 	}
 	
-
 	for (int i = 0; i < t; ++i)
 	{
-
-	//	cout <<i+1<< "번째 동작 시작" << endl;
-	//	View();
-	//	 1.회전
+		// 1.회전
 		Turn(vInfo[i]);
-
-	//	cout << "회전 동작 완료" << endl;
-//View();
-		 //2. 인전합 수 지우기
-
+		// 2. 인전합 수 지우기
 		RemoveNum();
-
-	//	cout << "인접 한 수 지우기 동작 완료" << endl;
-	//	View();
-		
 		// 3. 보드 숫자 채우기
 		FillNum();
-	//	cout << "채우기 동작 완료" << endl;
-	//	View();
-	//	cout << "###################" << endl;
 	}
 	
 	int iAns = 0;
