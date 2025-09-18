@@ -24,76 +24,46 @@ void back2(vector<int> &vTemp, int limit,vector<vector<int>> &vRoll)
     
     return;
 }
-int calWin(vector<int> &diceA, vector<int> &diceB, const vector<vector<int>> &dice) {
-    vector<int> arrA, arrB;
-
-    // A의 합 구하기
-    function<void(int,int)> dfsA = [&](int idx, int sum) {
-        if (idx == diceA.size()) {
-            arrA.push_back(sum);
-            return;
-        }
-        for (int x : dice[diceA[idx]]) {
-            dfsA(idx+1, sum+x);
-        }
-    };
-    dfsA(0,0);
-
-    // B의 합 구하기
-    function<void(int,int)> dfsB = [&](int idx, int sum) {
-        if (idx == diceB.size()) {
-            arrB.push_back(sum);
-            return;
-        }
-        for (int x : dice[diceB[idx]]) {
-            dfsB(idx+1, sum+x);
-        }
-    };
-    dfsB(0,0);
-
-    // B의 합 정렬
-    sort(arrB.begin(), arrB.end());
-
-    long long winCount = 0;
-    for (int x : arrA) {
-        // x보다 작은 arrB 원소 개수 찾기
-        int cnt = lower_bound(arrB.begin(), arrB.end(), x) - arrB.begin();
-        winCount += cnt;
-    }
-
-    return winCount;
-}
-int calWin2(vector<int> &diceA,vector<int> &diceB, const vector<vector<int>> &dice)
+int calWin(vector<int> &diceA,vector<int> &diceB, const vector<vector<int>> &dice)
 {
     int iRet = 0;
     vector<int>vTemp;
     vector<vector<int>>vRoll;
     back2(vTemp,diceA.size(),vRoll);
     
+    
+    vector<int> arrA, arrB;
     for(int i=0;i<vRoll.size();++i)
     {
-            //i는 A의 vRoll 번호
+        //i는 A의 vRoll 번호
         int sumA=0;
+        int sumB=0;
         for(int m=0;m<diceA.size();++m)
         {
             //cout<<vRoll[i][m]<<", ";
             sumA+=dice[diceA[m]][vRoll[i][m]];
+            sumB+=dice[diceB[m]][vRoll[i][m]];
         }
-        //cout<<endl;
-       for(int j=0;j<vRoll.size();++j)
-        {
-            //j는 B의 vRoll 번호
-            int sumB=0;
-            for(int m=0;m<diceB.size();++m)
-                sumB+=dice[diceB[m]][vRoll[j][m]];
-            if(sumA > sumB) iRet++;   
-            
-        }
-    }
+        arrA.push_back(sumA);
+        arrB.push_back(sumB);
      
+    }
+        // B의 합 정렬
+    sort(arrB.begin(), arrB.end());
+
+    long long winCount = 0;
+    
+    iRet = 0;
+    for(int i=0;i<arrA.size();++i)
+    {
+        // x보다 작은 arrB 원소 개수 찾기
+        int cnt = lower_bound(arrB.begin(), arrB.end(), arrA[i]) - arrB.begin();
+        iRet += cnt;  
+    }
     
     return iRet;
 }
+
 void back(vector<int> &v1,int idx, const int limit, const vector<vector<int>> &dice,vector<int> &answer)
 {
     if(v1.size() == limit)
